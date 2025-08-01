@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   IconBrightnessDown,
@@ -17,19 +17,25 @@ import {
   IconVolume,
   IconVolume2,
   IconVolume3,
+  IconSearch,
+  IconWorld,
+  IconCommand,
+  IconCaretLeftFilled,
+  IconCaretDownFilled,
 } from "@tabler/icons-react";
-import { IconSearch } from "@tabler/icons-react";
-import { IconWorld } from "@tabler/icons-react";
-import { IconCommand } from "@tabler/icons-react";
-import { IconCaretLeftFilled } from "@tabler/icons-react";
-import { IconCaretDownFilled } from "@tabler/icons-react";
-
 
 export const MacbookScroll = ({
   src,
   showGradient,
   title,
-  badge
+  badge,
+  children,
+}: {
+  src?: string;
+  showGradient?: boolean;
+  title?: React.ReactNode;
+  badge?: React.ReactNode;
+  children?: React.ReactNode;
 }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -40,7 +46,7 @@ export const MacbookScroll = ({
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (window && window.innerWidth < 768) {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
       setIsMobile(true);
     }
   }, []);
@@ -68,17 +74,16 @@ export const MacbookScroll = ({
           </span>
         )}
       </motion.h2>
-      {/* Lid */}
+
       <Lid
-        src={src}
         scaleX={scaleX}
         scaleY={scaleY}
         rotate={rotate}
-        translate={translate} />
-      {/* Base area */}
-      <div
-        className="relative -z-10 h-[22rem] w-[32rem] overflow-hidden rounded-2xl bg-gray-200 dark:bg-[#272729]">
-        {/* above keyboard bar */}
+        translate={translate}
+        children={children}
+      />
+
+      <div className="relative -z-10 h-[22rem] w-[32rem] overflow-hidden rounded-2xl bg-gray-200 dark:bg-[#272729]">
         <div className="relative h-10 w-full">
           <div className="absolute inset-x-0 mx-auto h-4 w-[80%] bg-[#050505]" />
         </div>
@@ -94,11 +99,9 @@ export const MacbookScroll = ({
           </div>
         </div>
         <Trackpad />
-        <div
-          className="absolute inset-x-0 bottom-0 mx-auto h-2 w-20 rounded-tl-3xl rounded-tr-3xl bg-gradient-to-t from-[#272729] to-[#050505]" />
+        <div className="absolute inset-x-0 bottom-0 mx-auto h-2 w-20 rounded-tl-3xl rounded-tr-3xl bg-gradient-to-t from-[#272729] to-[#050505]" />
         {showGradient && (
-          <div
-            className="absolute inset-x-0 bottom-0 z-50 h-40 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-black dark:via-black"></div>
+          <div className="absolute inset-x-0 bottom-0 z-50 h-40 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-black dark:via-black"></div>
         )}
         {badge && <div className="absolute bottom-4 left-4">{badge}</div>}
       </div>
@@ -111,7 +114,13 @@ export const Lid = ({
   scaleY,
   rotate,
   translate,
-  src
+  children,
+}: {
+  scaleX: any;
+  scaleY: any;
+  rotate: any;
+  translate: any;
+  children: React.ReactNode;
 }) => {
   return (
     <div className="relative [perspective:800px]">
@@ -132,10 +141,11 @@ export const Lid = ({
           </span>
         </div>
       </div>
+
       <motion.div
         style={{
-          scaleX: scaleX,
-          scaleY: scaleY,
+          scaleX,
+          scaleY,
           rotateX: rotate,
           translateY: translate,
           transformStyle: "preserve-3d",
@@ -143,14 +153,18 @@ export const Lid = ({
         }}
         className="absolute inset-0 h-96 w-[32rem] rounded-2xl bg-[#010101] p-2">
         <div className="absolute inset-0 rounded-lg bg-[#272729]" />
-        <img
-          src={src}
-          alt="aceternity logo"
-          className="absolute inset-0 h-full w-full rounded-lg object-cover object-left-top" />
+        <div className="absolute inset-0 h-full w-full rounded-lg p-2">
+          <div className="h-full w-full overflow-hidden rounded-md">
+            {children}
+          </div>
+        </div>
       </motion.div>
     </div>
   );
 };
+
+// SpeakerGrid, Trackpad, Keypad, KBtn, OptionKey, AceternityLogo should follow below...
+// For brevity, reuse your full implementation of those supporting components (no changes needed)
 
 export const Trackpad = () => {
   return (
@@ -158,19 +172,20 @@ export const Trackpad = () => {
       className="mx-auto my-1 h-32 w-[40%] rounded-xl"
       style={{
         boxShadow: "0px 0px 1px 1px #00000020 inset",
-      }}></div>
+      }}
+    ></div>
   );
 };
 
 export const Keypad = () => {
   return (
-    <div
-      className="mx-1 h-full [transform:translateZ(0)] rounded-md bg-[#050505] p-1 [will-change:transform]">
+    <div className="mx-1 h-full [transform:translateZ(0)] rounded-md bg-[#050505] p-1 [will-change:transform]">
       {/* First Row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn
           className="w-10 items-end justify-start pb-[2px] pl-[4px]"
-          childrenClassName="items-start">
+          childrenClassName="items-start"
+        >
           esc
         </KBtn>
         <KBtn>
@@ -222,12 +237,12 @@ export const Keypad = () => {
           <span className="mt-1 inline-block">F12</span>
         </KBtn>
         <KBtn>
-          <div
-            className="h-4 w-4 rounded-full bg-gradient-to-b from-neutral-900 from-20% via-black via-50% to-neutral-900 to-95% p-px">
+          <div className="h-4 w-4 rounded-full bg-gradient-to-b from-neutral-900 from-20% via-black via-50% to-neutral-900 to-95% p-px">
             <div className="h-full w-full rounded-full bg-black" />
           </div>
         </KBtn>
       </div>
+
       {/* Second row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn>
@@ -284,15 +299,18 @@ export const Keypad = () => {
         </KBtn>
         <KBtn
           className="w-10 items-end justify-end pr-[4px] pb-[2px]"
-          childrenClassName="items-end">
+          childrenClassName="items-end"
+        >
           delete
         </KBtn>
       </div>
+
       {/* Third row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn
           className="w-10 items-end justify-start pb-[2px] pl-[4px]"
-          childrenClassName="items-start">
+          childrenClassName="items-start"
+        >
           tab
         </KBtn>
         <KBtn>
@@ -338,11 +356,13 @@ export const Keypad = () => {
           <span className="block">{`\\`}</span>
         </KBtn>
       </div>
+
       {/* Fourth Row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn
           className="w-[2.8rem] items-end justify-start pb-[2px] pl-[4px]"
-          childrenClassName="items-start">
+          childrenClassName="items-start"
+        >
           caps lock
         </KBtn>
         <KBtn>
@@ -382,15 +402,18 @@ export const Keypad = () => {
         </KBtn>
         <KBtn
           className="w-[2.85rem] items-end justify-end pr-[4px] pb-[2px]"
-          childrenClassName="items-end">
+          childrenClassName="items-end"
+        >
           return
         </KBtn>
       </div>
+
       {/* Fifth Row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn
           className="w-[3.65rem] items-end justify-start pb-[2px] pl-[4px]"
-          childrenClassName="items-start">
+          childrenClassName="items-start"
+        >
           shift
         </KBtn>
         <KBtn>
@@ -428,10 +451,12 @@ export const Keypad = () => {
         </KBtn>
         <KBtn
           className="w-[3.65rem] items-end justify-end pr-[4px] pb-[2px]"
-          childrenClassName="items-end">
+          childrenClassName="items-end"
+        >
           shift
         </KBtn>
       </div>
+
       {/* sixth Row */}
       <div className="mb-[2px] flex w-full shrink-0 gap-[2px]">
         <KBtn className="" childrenClassName="h-full justify-between py-[4px]">
@@ -458,7 +483,10 @@ export const Keypad = () => {
             <span className="block">option</span>
           </div>
         </KBtn>
-        <KBtn className="w-8" childrenClassName="h-full justify-between py-[4px]">
+        <KBtn
+          className="w-8"
+          childrenClassName="h-full justify-between py-[4px]"
+        >
           <div className="flex w-full justify-end pr-1">
             <IconCommand className="h-[6px] w-[6px]" />
           </div>
@@ -467,7 +495,10 @@ export const Keypad = () => {
           </div>
         </KBtn>
         <KBtn className="w-[8.2rem]"></KBtn>
-        <KBtn className="w-8" childrenClassName="h-full justify-between py-[4px]">
+        <KBtn
+          className="w-8"
+          childrenClassName="h-full justify-between py-[4px]"
+        >
           <div className="flex w-full justify-start pl-1">
             <IconCommand className="h-[6px] w-[6px]" />
           </div>
@@ -483,8 +514,7 @@ export const Keypad = () => {
             <span className="block">option</span>
           </div>
         </KBtn>
-        <div
-          className="mt-[2px] flex h-6 w-[4.9rem] flex-col items-center justify-end rounded-[4px] p-[0.5px]">
+        <div className="mt-[2px] flex h-6 w-[4.9rem] flex-col items-center justify-end rounded-[4px] p-[0.5px]">
           <KBtn className="h-3 w-6">
             <IconCaretUpFilled className="h-[6px] w-[6px]" />
           </KBtn>
@@ -509,29 +539,37 @@ export const KBtn = ({
   className,
   children,
   childrenClassName,
-  backlit = true
+  backlit = true,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+  childrenClassName?: string;
+  backlit?: boolean;
 }) => {
   return (
     <div
       className={cn(
         "[transform:translateZ(0)] rounded-[4px] p-[0.5px] [will-change:transform]",
-        backlit && "bg-white/[0.2] shadow-xl shadow-white"
-      )}>
+        backlit && "bg-white/[0.2] shadow-xl shadow-white",
+      )}
+    >
       <div
         className={cn(
           "flex h-6 w-6 items-center justify-center rounded-[3.5px] bg-[#0A090D]",
-          className
+          className,
         )}
         style={{
           boxShadow:
             "0px -0.5px 2px 0 #0D0D0F inset, -0.5px 0px 2px 0 #0D0D0F inset",
-        }}>
+        }}
+      >
         <div
           className={cn(
             "flex w-full flex-col items-center justify-center text-[5px] text-neutral-200",
             childrenClassName,
-            backlit && "text-white"
-          )}>
+            backlit && "text-white",
+          )}
+        >
           {children}
         </div>
       </div>
@@ -547,13 +585,12 @@ export const SpeakerGrid = () => {
         backgroundImage:
           "radial-gradient(circle, #08080A 0.5px, transparent 0.5px)",
         backgroundSize: "3px 3px",
-      }}></div>
+      }}
+    ></div>
   );
 };
 
-export const OptionKey = ({
-  className
-}) => {
+export const OptionKey = ({ className }: { className: string }) => {
   return (
     <svg
       fill="none"
@@ -561,37 +598,35 @@ export const OptionKey = ({
       id="icon"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 32 32"
-      className={className}>
-      <rect stroke="currentColor" strokeWidth={2} x="18" y="5" width="10" height="2" />
+      className={className}
+    >
+      <rect
+        stroke="currentColor"
+        strokeWidth={2}
+        x="18"
+        y="5"
+        width="10"
+        height="2"
+      />
       <polygon
         stroke="currentColor"
         strokeWidth={2}
-        points="10.6,5 4,5 4,7 9.4,7 18.4,27 28,27 28,25 19.6,25 " />
+        points="10.6,5 4,5 4,7 9.4,7 18.4,27 28,27 28,25 19.6,25 "
+      />
       <rect
         id="_Transparent_Rectangle_"
         className="st0"
         width="32"
         height="32"
-        stroke="none" />
+        stroke="none"
+      />
     </svg>
   );
 };
 
 const AceternityLogo = () => {
   return (
-    <svg
-      width="66"
-      height="65"
-      viewBox="0 0 66 65"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-3 w-3 text-white">
-      <path
-        d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696"
-        stroke="currentColor"
-        strokeWidth="15"
-        strokeMiterlimit="3.86874"
-        strokeLinecap="round" />
-    </svg>
+    <h2>M</h2>
+        
   );
 };

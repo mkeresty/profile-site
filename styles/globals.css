@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional custom styles */
+html,
+body {
+  @apply bg-white dark:bg-black text-black dark:text-white;
+}
+
+* {
+  @apply box-border;
+}
