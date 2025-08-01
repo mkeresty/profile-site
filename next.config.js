@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: '/your-repo-name',
+  basePath: '/profile-site',
+  assetPrefix: '/profile-site',
   images: { unoptimized: true },
 };
 

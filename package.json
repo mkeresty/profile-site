@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next export"
+    "export": "next export",
+     "gh-pages": "npm run build && npm run export"
   },
   "dependencies": {
     "next": "13.4.19",
