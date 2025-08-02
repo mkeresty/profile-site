@@ -1,9 +1,13 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',
-  basePath: '/profile-site',
-  assetPrefix: '/profile-site',
-  images: { unoptimized: true },
-};
+// next.config.js
+const isProd = process.env.NODE_ENV === 'production';
 
-module.exports = nextConfig;
+module.exports = {
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
+  ...(isProd && {
+    basePath: '/profile-site',
+    assetPrefix: '/profile-site',
+  }),
+};

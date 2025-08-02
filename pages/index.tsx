@@ -10,7 +10,7 @@ export default function Home() {
       </header>
 
       <MacbookScroll
-        title="Explore my GitHub"
+        title="Explore my Profile"
         src="" // we won't use this, we override with component below
         showGradient={false}
         badge={
