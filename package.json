@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next export  && node scripts/move-out-to-docs.js"
+    "export": "next build && node scripts/move-out-to-docs.js"
   },
   "dependencies": {
     "@tabler/icons-react": "^2.30.0",
