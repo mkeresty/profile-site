@@ -7,8 +7,8 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { marked } from "marked";
 
 // 🔧 Configurable
-const REPO_NAME = "mkeresty/Portfolio"; // Your GitHub repo name
-const SITE_URL = "https://portfolio-mkjuice.vercel.app";
+const REPO_NAME = "mkeresty/Portfolio";
+const SITE_URL = "https://portfolio-eight-flax-25.vercel.app";
 
 export default function GithubScreen() {
   const [fileTree, setFileTree] = useState<FileNode[]>([]);

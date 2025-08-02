@@ -38,9 +38,10 @@ export type FileNode = {
       children: node.children
         ? Object.values(node.children)
             .map(convert)
-            .sort((a, b) =>
-            a.type === b.type ? a.name.localeCompare(b.name) : a.type === "folder" ? -1 : 1
-          )
+      .sort((a, b) =>
+        a.type === b.type ? a.name.localeCompare(b.name) : a.type === "folder" ? -1 : 1
+      )
+
           
         : undefined,
     });
