@@ -210,14 +210,30 @@ export default function GithubScreen() {
             </div>
           </div>
 
-          {/* Iframe */}
-          <div className="flex-1">
-            <iframe
-              src={SITE_URL}
-              className="w-full h-full border-none"
-              title="Profile Site"
-            />
-          </div>
+          <div className="flex-1 overflow-auto bg-black flex justify-center items-start">
+  <div
+    style={{
+      width: "1280px",         // Tell iframe it's 1280px wide
+      height: "1000px",
+      zoom: 0.39,              // 👈 Visually scale it down (adjust this)
+      transformOrigin: "top left",
+    }}
+  >
+    <iframe
+      src={SITE_URL}
+      title="Profile Site"
+      className="border-none"
+      style={{
+        width: "1280px",
+        height: "1000px",
+        pointerEvents: "auto",
+      }}
+    />
+  </div>
+</div>
+
+
+
         </div>
       )}
     </div>
