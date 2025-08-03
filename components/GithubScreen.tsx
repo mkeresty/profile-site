@@ -1,12 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { buildFileTree, FileNode } from "@/utils/fileTree";
-import { FileText, Folder, FolderOpen, X } from "lucide-react";
+import { FileText, Folder, FolderOpen, X, Code, ExternalLink } from "lucide-react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { marked } from "marked";
 
-// 🔧 Configurable
 const REPO_NAME = "mkeresty/Portfolio";
 const SITE_URL = "https://portfolio-eight-flax-25.vercel.app";
 
@@ -55,9 +54,9 @@ export default function GithubScreen() {
                   [node.path]: !prev[node.path],
                 }))
               }
-              className="flex items-center gap-1 text-left text-gray-300 hover:text-white text-[9px]"
+              className="flex items-center gap-1 text-left text-gray-300 hover:text-white text-[8px]"
             >
-              {collapsed[node.path] ? <Folder size={11} /> : <FolderOpen size={11} />}
+              {collapsed[node.path] ? <Folder size={10} /> : <FolderOpen size={10} />}
               {node.name}
             </button>
             {!collapsed[node.path] &&
@@ -67,9 +66,9 @@ export default function GithubScreen() {
         ) : (
           <button
             onClick={() => openFile(node.path)}
-            className="flex items-center gap-1 text-left text-gray-300 hover:text-white px-1 py-0.5 text-[9px]"
+            className="flex items-center gap-1 text-left text-gray-300 hover:text-white px-1 py-0.5 text-[8px]"
           >
-            <FileText size={11} />
+            <FileText size={10} />
             {node.name}
           </button>
         )}
@@ -94,28 +93,30 @@ export default function GithubScreen() {
     return "text";
   };
 
+  const backToCode = () => setLaunched(false);
+
   return (
     <div
-      className="flex h-full w-full bg-[#1e1e1e] text-white font-mono text-[9px] rounded-lg overflow-hidden"
+      className="w-full h-full rounded-lg flex bg-[#1e1e1e] text-white font-mono text-[8px] overflow-hidden"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && setLaunched(true)}
     >
       {!launched ? (
         <>
           {/* Sidebar */}
-          <aside className="w-[26%] bg-[#252526] border-r border-[#333] p-1 overflow-y-auto text-[9px]">
-            <h2 className="text-[9px] text-gray-400 mb-1">EXPLORER</h2>
+          <aside className="w-[26%] bg-[#252526] border-r border-[#333] p-1 overflow-y-auto text-[8px]">
+            <h2 className="text-[8px] text-gray-400 mb-1">EXPLORER</h2>
             {renderFileTree(fileTree)}
           </aside>
 
           {/* Editor Area */}
-          <main className="w-[74%] flex flex-col">
+          <main className="w-[74%] flex flex-col h-full">
             {/* Tabs */}
-            <div className="bg-[#2d2d2d] px-1 py-1 border-b border-[#3f3f3f] flex gap-1 overflow-x-auto text-[9px]">
+            <div className="bg-[#2d2d2d] px-1 py-0.5 border-b border-[#3f3f46] flex gap-1 overflow-x-auto text-[8px] h-[20px]">
               {openTabs.map((tab) => (
                 <div
                   key={tab}
-                  className={`flex items-center gap-1 px-2 py-[2px] rounded-t cursor-pointer ${
+                  className={`flex items-center gap-1 px-1 py-0.5 rounded cursor-pointer text-[8px] leading-none ${
                     tab === activeTab
                       ? "bg-[#1e1e1e] text-white"
                       : "bg-[#3f3f46] text-gray-300"
@@ -135,11 +136,11 @@ export default function GithubScreen() {
             </div>
 
             {/* Editor Content */}
-            <div className="flex-1 overflow-auto bg-[#1e1e1e] p-2 text-[9px] leading-tight">
+            <div className="flex-1 overflow-auto bg-[#1e1e1e] p-2 text-[8px] leading-tight min-h-0">
               {activeTab ? (
                 activeTab.endsWith(".md") ? (
                   <div
-                    className="prose prose-invert max-w-none text-[9px]"
+                    className="prose prose-invert max-w-none text-[8px]"
                     dangerouslySetInnerHTML={{
                       __html: marked(fileContents[activeTab] || ""),
                     }}
@@ -148,39 +149,75 @@ export default function GithubScreen() {
                   <SyntaxHighlighter
                     language={getFileLanguage(activeTab)}
                     style={vscDarkPlus}
+                    PreTag="div"
                     customStyle={{
                       background: "transparent",
-                      fontSize: "9px",
+                      fontSize: "8px",
                       padding: 0,
                       margin: 0,
                       minHeight: "100%",
+                    }}
+                    codeTagProps={{
+                      style: {
+                        fontSize: "8px",
+                        lineHeight: "1.2",
+                      },
                     }}
                   >
                     {fileContents[activeTab] || ""}
                   </SyntaxHighlighter>
                 )
               ) : (
-                <p className="text-gray-500 text-[9px] italic">No file selected</p>
+                <p className="text-gray-500 text-[8px] italic">No file selected</p>
               )}
             </div>
 
             {/* Terminal */}
-            <div
-              className="bg-black text-green-400 px-3 py-1 text-[9px] border-t border-[#333] cursor-pointer"
-              onClick={() => setLaunched(true)}
-            >
-              $ run site
+            <div className="bg-black text-green-400 px-3 py-2 text-[8px] border-t border-[#333] flex items-center justify-between min-h-[32px]">
+              <span
+                className="cursor-pointer hover:text-green-300 transition-colors"
+                onClick={() => setLaunched(true)}
+              >
+                $ run site
+              </span>
             </div>
           </main>
         </>
       ) : (
         // FULL SIZE IFRAME VIEW
-        <div className="w-full h-full">
-          <iframe
-            src={SITE_URL}
-            className="w-full h-full border-none"
-            title="Profile Site"
-          />
+        <div className="w-full h-full flex flex-col">
+          {/* Header with controls */}
+          <div className="bg-[#2d2d2d] px-3 py-1 border-b border-[#3f3f46] flex items-center justify-between text-[8px]">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={backToCode}
+                className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors"
+              >
+                <Code size={10} />
+                Back to Code
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <a
+                href={SITE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors"
+              >
+                <ExternalLink size={10} />
+                Open in New Tab
+              </a>
+            </div>
+          </div>
+
+          {/* Iframe */}
+          <div className="flex-1">
+            <iframe
+              src={SITE_URL}
+              className="w-full h-full border-none"
+              title="Profile Site"
+            />
+          </div>
         </div>
       )}
     </div>

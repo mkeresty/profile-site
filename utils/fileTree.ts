@@ -38,14 +38,26 @@ export type FileNode = {
       children: node.children
         ? Object.values(node.children)
             .map(convert)
-      .sort((a, b) =>
-        a.type === b.type ? a.name.localeCompare(b.name) : a.type === "folder" ? -1 : 1
-      )
-
-          
+            .sort((a, b) => {
+              // First sort by type: folders before files
+              if (a.type !== b.type) {
+                return a.type === "folder" ? -1 : 1;
+              }
+              // Then sort alphabetically within each type
+              return a.name.localeCompare(b.name);
+            })
         : undefined,
     });
   
-    return Object.values(root).map(convert);
+    return Object.values(root)
+      .map(convert)
+      .sort((a, b) => {
+        // First sort by type: folders before files
+        if (a.type !== b.type) {
+          return a.type === "folder" ? -1 : 1;
+        }
+        // Then sort alphabetically within each type
+        return a.name.localeCompare(b.name);
+      });
   }
   
